@@ -5,6 +5,6 @@
 * 本レポジトリのコンテンツは課題ごとにページが分かれていますが、以下のように学習を進めることを前途としています。
     1. インストール方法について([install.md](./install.md))
     2. エネルギー計算([energy.md](./energy.md))
-    3. 構造最適化([optimization.md](./optimization.md))
-    4. 分子動力学([molecular_dynamics](./molecular_dynamics.md))
-    5. meta-dynamics分子動力学([metadynamics](./metadynamics.md))
+    3. 構造最適化
+    4. 分子動力学
+    5. meta-dynamics分子動力学
