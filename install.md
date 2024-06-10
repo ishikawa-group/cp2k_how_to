@@ -12,7 +12,41 @@
     * https://github.com/cp2k/cp2k/blob/master/INSTALL.md
 * dockerを用いるのが最も簡単だが、ここではソースコードからコンパイルする方法を記述する
 
-### バイナリの種類
+## 北大計算機センター(Grand Chariot)でのコンパイル
+* PRIMERGY CX2550, Intel Xeon Gold
+* cp2k-2023.1のコンパイル例
+* 手順
+    1. intelコンパイラをロード: `module load intel; module load impi`
+    2. Githubからソースをダウンロード: `git clone -b support/v2023.1 --recursive https://github.com/cp2k/cp2k.git cp2k-2023.1`
+    3. `cd cp2k-2023.1`
+    4. `git submodule update --init --recursive`
+    5. `cd tool/toolchain`
+    6. 補助ライブラリ等をコンパイル: `./install_cp2k_toolchain.sh --mpi-mode=intelmpi --math-mode=mkl --with-elpa=install --with-sirius=no`
+        * `--with-PKG=install`で各パッケージがインストールされる。入れない場合は`=no`。
+        * elpaは入れたほうが計算が早いような印象
+        * siriusはコンパイルできないことが多いのでパス
+    7. `cd ../../`
+    8. makefileを編集
+        * `./arch`に対応するmakefileがあるので編集する
+        * この場合は`Linux-intel-x86_64.psmp`
+        * `CXX=icpc`を追加
+        * SIRIUS, SCOTCHなど、使っていないライブラリの`USE...`ををコメントアウト
+    9. `make ARCH=Linux-intel-x86_64 VERSION=psmp`
+
+* cp2kのバージョンやコンパイル環境で補助ライブラリがコンパイルできる・できないが変わるので注意。基本的にはBLAS, LAPACK, XSMMがあればよい。LIBXC, LIBINTも可能であればコンパイルしたい。
+
+## MacOSでのコンパイル
+1. `brew uninstall cp2k`
+2. `brew unlink open-mpi scalapack`
+3. `ln -f -s /opt/homebrew/bin/gcc-13 /opt/homebrew/bin/gcc`
+4. `ln -f -s /opt/homebrew/bin/g++-13 /opt/homebrew/bin/g++`
+5. `ln -f -s /opt/homebrew/bin/gfortran-13 /opt/homebrew/bin/gfortran`
+6. `git clone --recursive https://github.com/cp2k/cp2k.git cp2k`
+7. `cd cp2k`
+8. `source arch/Darwin-gnu-arm64.ssmp`
+9. `make -j ARCH=Darwin-gnu-arm64 VERSION=ssmp`
+
+## バイナリの種類
 * 並列計算に用いるライブラリ(OpenMP, MPI)によってcp2kバイナリファイルの種類が異なる
 
 |種類| 並列計算の設定 |
@@ -26,32 +60,12 @@
 
 * 実際の計算にも通るのであればpoptかpsmpがよい。psmpのみでほぼ大丈夫。
 
-### Linux
-1. `https://github.com/cp2k/cp2k/releases/`から.tar.bz2ファイルのリンクを取得
-2. ソースをダウンロード: `wget https://github.com/cp2k/cp2k/releases/download/v2024.1/cp2k-2024.1-Linux-gnu-x86_64.tar.bz2` (for example)
-3. 解凍: `tar jxvf cp2k-2024.1.tar.bz2`
-4. `cd cp2k-2024.1; cd tools/toolchain`
-5. ライブラリー等の依存パッケージをインストール: `./install_cp2k_toolchain.sh`
-6. 環境変数等の設定: `source ./arch/Linux-intel-x86_64.psmp` (in case of intel compiler)
-7. Make: `make -j ARCH=Linux-intel-x86_64 VERSION=psmp`
-
-### MacOS
-1. `brew uninstall cp2k`
-2. `brew unlink open-mpi scalapack`
-3. `ln -f -s /opt/homebrew/bin/gcc-13 /opt/homebrew/bin/gcc`
-4. `ln -f -s /opt/homebrew/bin/g++-13 /opt/homebrew/bin/g++`
-5. `ln -f -s /opt/homebrew/bin/gfortran-13 /opt/homebrew/bin/gfortran`
-6. `git clone --recursive https://github.com/cp2k/cp2k.git cp2k`
-7. `cd cp2k`
-8. `source arch/Darwin-gnu-arm64.ssmp`
-9. `make -j ARCH=Darwin-gnu-arm64 VERSION=ssmp`
-
 # プログラムの実行
-### serial
+### serial計算
 * コンパイルしたcp2kは`${HOME}/cp2k/cp2k-version/cp2k/exe/Linux-.../cp2k.sopt`とする
 * 実行コマンド: `cp2k.sopt -i input.inp -o output.out`
 
-### parallel
+### parallel計算
 * プロセス数をNPROCSとする
 * 実行コマンド: `mpiexec -n $NPROCS cp2k.popt -i input.inp -o output.out`
-
+    * `mpiexec.hydra -n ${PJM_MPI_PROC}`を使う場合もある
