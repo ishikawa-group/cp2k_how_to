@@ -21,8 +21,9 @@
     3. `cd cp2k-2023.1`
     4. `git submodule update --init --recursive`
     5. `cd tool/toolchain`
-    6. 補助ライブラリ等をコンパイル: `./install_cp2k_toolchain.sh --mpi-mode=intelmpi --math-mode=mkl --with-elpa=install --with-sirius=no`
+    6. 補助ライブラリ等をコンパイル: `./install_cp2k_toolchain.sh --mpi-mode=intelmpi --math-mode=mkl --with-elpa=install --with-pexsi=install --with-sirius=no --with-plumed=install`
         * `--with-PKG=install`で各パッケージがインストールされる。入れない場合は`=no`。
+        * 実際に使うかわからないけど、入れれるものは入れたほうがいい？
         * elpaは入れたほうが計算が早いような印象
         * siriusはコンパイルできないことが多いのでパス
     7. `cd ../../`
@@ -58,7 +59,7 @@
 | popt | MPI + OpenMP + OMP_NUM_THREADS=1 |
 | psmp | MPI + OpenMP |
 
-* 実際の計算にも通るのであればpoptかpsmpがよい。psmpのみでほぼ大丈夫。
+* poptはpsmpをリンクしているだけなので、実際はpsmpのみをコンパイルすればよい
 
 # プログラムの実行
 ### serial計算
