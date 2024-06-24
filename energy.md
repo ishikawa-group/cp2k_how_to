@@ -1,11 +1,11 @@
 ## DFT法によりエネルギーを計算する
-* cp2kのプログラムの実行は過去の記事を参考
-* 以下はインプットファイル(`test.inp`)の例
-* ここでは、DFT(密度汎関数理論)によるエネルギー計算(構造固定)と構造最適化の例を順に紹介する
+* ここでは、cp2kのコンパイルおよび実行の方法についてはできているものとする。これらは[過去の記事](./install.md)を参照のこと
+* ここでは、DFT(密度汎関数理論)によるエネルギー計算(構造固定)の例を紹介する
+* インプットファイルは`test.inp`とする
 
 ### インプットの構成
 ```
-! structure of cp2k input file
+! an example of CP2K section
 &SECTION
   KEYWORD VALUE
   &SUBSECTION
@@ -17,10 +17,10 @@
 * 各セクションは`&XXX`,`&END XXX`(もしくは単に`&END`)で囲まれる
 * セクションは階層的になっており、サブセクションがあるものも多い
 * セクション内ではキーワードとパラメーターをペアで指定する。パラメーターは数値、文字列、論理値(`.TRUE.`, `.FALSE.`)などがある
-* インデントは必須ではない(見やすいから入れた方がよい)
+* インデントは必須ではないが、見やすいから入れた方がよい
 * コメントアウトは`!`で可能
 
-### 主なセクション
+### 主なセクションの例
 * `GLOBAL`: 計算の種類など、全体の設定を行うため必須となる
 * `FORCE_EVAL`: エネルギーやフォース(力)の計算方法を設定。ほぼ必須
 * `MOTION`: 原子核の動きに対する設定。構造最適化やMDでは必須
@@ -40,8 +40,8 @@
 
 ```
 &GLOBAL
-  PROJECT c8_001
-  RUN_TYPE MD
+  PROJECT test
+  RUN_TYPE ENERGY
   PRINT_LEVEL MEDIUM
 &END GLOBAL
 
@@ -50,9 +50,6 @@
   &DFT
     BASIS_SET_FILE_NAME BASIS_MOLOPT
     POTENTIAL_FILE_NAME POTENTIAL
-
-    ! UKS
-    MULTIPLICITY 1
 
     &MGRID
       NGRIDS 4
@@ -84,75 +81,31 @@
 
     &XC
       &XC_FUNCTIONAL PBE
-      &END XC_FUNCTIONAL
-      &VDW_POTENTIAL
-        POTENTIAL_TYPE PAIR_POTENTIAL
-        &PAIR_POTENTIAL
-          TYPE DFTD3 # DFTD3(BJ) for Becke-Jonshon dampling
-          CALCULATE_C9_TERM .TRUE. # optional
-          REFERENCE_FUNCTIONAL PBE
-          PARAMETER_FILE_NAME dftd3.dat
-          R_CUTOFF 15
-        &END PAIR_POTENTIAL
-      &END VDW_POTENTIAL
     &END XC
 
   &END DFT
 
   &SUBSYS
-    &KIND Cu
-      ELEMENT Cu
-      BASIS_SET DZVP-MOLOPT-SR-GTH
-      POTENTIAL GTH-PBE
-    &END KIND
-    &KIND Zn
-      ELEMENT Zn
-      BASIS_SET DZVP-MOLOPT-SR-GTH
-      POTENTIAL GTH-PBE
-    &END KIND
-    &KIND C
-      ELEMENT C
-      BASIS_SET DZVP-MOLOPT-SR-GTH
-      POTENTIAL GTH-PBE
-    &END KIND
-    &KIND N
-      ELEMENT N
-      BASIS_SET DZVP-MOLOPT-SR-GTH
-      POTENTIAL GTH-PBE
-    &END KIND
-    &KIND H
-      ELEMENT H
+    &KIND Pt
+      ELEMENT Pt
       BASIS_SET DZVP-MOLOPT-SR-GTH
       POTENTIAL GTH-PBE
     &END KIND
 
     &CELL
       SYMMETRY ORTHORHOMBIC
-      A 66.36904248216935  0.000000000000000  0.000000000000000
-      B  0.00000000000000 13.263986957170907  0.000000000000000
-      C  0.00000000000000  0.000000000000000 26.252703415323644
+      A 11.76948  0.00000  0.00000
+      B  0.00000 11.76948  0.00000
+      C  0.00000  0.00000 27.84632
       PERIODIC XYZ
     &END CELL
 
     &TOPOLOGY
-      COORD_FILE_NAME opt.xyz
+      COORD_FILE_NAME pt_surf.xyz
       COORDINATE XYZ
       CONNECTIVITY OFF
     &END TOPOLOGY
-
-    &COLVAR
-      &DISTANCE
-        ATOMS 391 395 ! C-F
-      &END DISTANCE
-    &END COLVAR
-
   &END SUBSYS
-
-  &PRINT
-    &TOTAL_NUMBERS ON
-    &END TOTAL_NUMBERS
-  &END PRINT
-
 &END FORCE_EVAL
 ```
 * 実行: `cp2k -i test.inp -o test.out`

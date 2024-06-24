@@ -12,7 +12,7 @@
     * https://github.com/cp2k/cp2k/blob/master/INSTALL.md
 * dockerを用いるのが最も簡単だが、ここではソースコードからコンパイルする方法を記述する
 
-## 北大計算機センター(Grand Chariot)でのコンパイル
+## Linuxでのコンパイル
 * PRIMERGY CX2550, Intel Xeon Gold
 * cp2k-2023.1のコンパイル例
 * 手順
