@@ -1,0 +1,35 @@
+## 構造最適化
+* `&MOTION`セクションを追加する
+```
+&MOTION
+  &GEO_OPT
+    MAX_DR    1.0E-04
+    MAX_FORCE 1.0E-04
+    RMS_DR    1.0E-04
+    RMS_FORCE 1.0E-04
+    MAX_ITER  500
+    OPTIMIZER LBFGS
+  &END GEO_OPT
+
+  &PRINT
+    &TRAJECTORY
+      LOG_PRINT_KEY .TRUE.
+      FORMAT XYZ
+      &EACH
+        GEO_OPT 1
+      &END EACH
+      ADD_LAST NUMERIC
+    &END TRAJECTORY
+  &END PRINT
+
+&END MOTION
+```
+* 原子位置を固定する場合には`&MOTION`セクション内に`&CONSTRAINT`を以下のように追加する
+```
+&CONSTRAINT
+    &FIXED_ATOMS
+        COMPONENTS_TO_FIX XYZ
+        LIST 73..384
+    &END FIXED_ATOMS
+&END CONSTRAINT
+```
