@@ -27,14 +27,14 @@
 
 ### DFTエネルギー計算に必要な設定
 * DFT計算においてはさらに
-    * `FORCE_EVAL`中での`DFT`と`SUBSYS`(あるいはそのサブセクション)での設定が必要
+  + `FORCE_EVAL`中での`DFT`と`SUBSYS`(あるいはそのサブセクション)での設定が必要
 * `DFT`: DFT計算条件の設定
-    * `QS`: cp2kのDFT計算コード(Quickstep)の設定
-    * `SCF`: SCF(自己無撞着場)の計算条件
-    * `XC`: 交換-相関汎関数の設定
+  + `QS`: cp2kのDFT計算コード(Quickstep)の設定
+  + `SCF`: SCF(自己無撞着場)の計算条件
+  + `XC`: 交換-相関汎関数の設定
 * `SUBSYS`: 分子構造やユニットセルの設定
-    * `KIND`: 原子種(元素)やそれに対する基底関数の設定
-    * `CELL`: ユニットセルと周期境界条件(PBC)の設定
+  + `KIND`: 原子種(元素)やそれに対する基底関数の設定
+  + `CELL`: ユニットセルと周期境界条件(PBC)の設定
 
 ## インプットファイルの例
 * それでは以上の情報を踏まえて分子のエネルギー計算のインプット(`test_energy_mol.inp`)を作成してみる
@@ -139,6 +139,7 @@
 #### DFT計算条件(&DFT, &SCF)
 * SCFのアルゴリズムはいろいろなチョイスがあるが、上記で多くの場合カバーできる
 * SCFはinner SCFとouter SCFに分けて二重のループを用いることができ、outer SCFを設定したほうが安全。この場合`&OUTER_SCF`セクションを指定する
+* SCFの収束条件は`EPS_SCF`で設定する。デフォルトは1.0E-5だが、1.0E-6のほうが良いように思う
 
 #### 構造(&SUBSYS)
 * 単位セルの構造と周期境界条件は`&CELL`で指定する
@@ -196,6 +197,7 @@ Step     Update method      Time    Convergence         Total energy    Change
       CUTOFF 280
       REL_CUTOFF 40
     &END MGRID
+    
     &QS
       METHOD GPW
       EPS_DEFAULT 1.0E-10

@@ -1,9 +1,9 @@
 ## CP2KによるMD計算
 * 分子動力学(molecular dynamics: MD)計算をCP2Kで行う
 * MD計算にはNVEやNVTなど、計算条件により保存される物理量が異なる
-    * NVE: 原子/分子数(N)、体積(V)、エネルギー(E)が保存される。micro canonical ensembleともいう
-    * NVT: エネルギーではなく温度(T)が保存される。canonical ensembleという
-    * NVmu: エネルギーではなく化学ポテンシャル(mu)が保存される。grand canonical ensembleという
+    + NVE: 原子/分子数(N)、体積(V)、エネルギー(E)が保存される。micro canonical ensembleともいう
+    + NVT: エネルギーではなく温度(T)が保存される。canonical ensembleという
+    + NVmu: エネルギーではなく化学ポテンシャル(mu)が保存される。grand canonical ensembleという
 * NVEとNVTがよく用いられるので、以下はその２つを解説する
 
 ### NVE
@@ -180,5 +180,5 @@
 ### NVE -> NVT
 * 変更点は以下
 ```
-asdf
+to be written
 ```
