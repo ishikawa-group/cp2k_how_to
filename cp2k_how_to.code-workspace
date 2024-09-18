@@ -1,8 +1,11 @@
 {
 	"folders": [
-		{
-			"path": "."
-		}
-    ],
+    {
+      "path": "."
+    },
+    {
+      "path": "../vasp_how_to"
+    }
+  ],
     "settings": {}
 }
